@@ -1,5 +1,5 @@
 import { createStore } from "solid-js/store";
-import { Conversation, ConversationState } from "../types";
+import type { ConversationState } from "../types";
 import { conversationApi } from "../api/conversationApi";
 
 const initialState: ConversationState = {
@@ -27,13 +27,13 @@ export const conversationActions = {
   fetchConversations: async () => {
     setConversationStore({ isLoading: true, error: null });
     try {
-      const { conversations, next_page_token } = await conversationApi.fetchConversations(
+      const response = await conversationApi.fetchConversations(
         conversationStore.searchQuery,
-        null // Always start from the beginning when calling fetchConversations
+        null
       );
       setConversationStore({
-        conversations: conversations,
-        nextPageToken: next_page_token,
+        conversations: response.conversations,
+        nextPageToken: response.next_page_token,
         isLoading: false,
       });
     } catch (err: any) {
@@ -49,13 +49,13 @@ export const conversationActions = {
 
     setConversationStore({ isLoading: true, error: null });
     try {
-      const { conversations, next_page_token } = await conversationApi.fetchConversations(
+      const response = await conversationApi.fetchConversations(
         conversationStore.searchQuery,
         conversationStore.nextPageToken
       );
       setConversationStore({
-        conversations: [...conversationStore.conversations, ...conversations],
-        nextPageToken: next_page_token,
+        conversations: [...conversationStore.conversations, ...response.conversations],
+        nextPageToken: response.next_page_token,
         isLoading: false,
       });
     } catch (err: any) {

@@ -1,8 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { WebRTCManager } from './webrtcClient';
 import { SignalingClient } from '../stores/signalingClient';
 import { LightningBridge } from '../../../bridge/lightningBridge';
-import { callActions } from '../stores/callStore';
 
 vi.mock('../stores/signalingClient');
 vi.mock('../stores/callStore');
@@ -17,15 +16,17 @@ describe('WebRTCManager', () => {
     vi.clearAllMocks();
     signalingClient = new SignalingClient('ws://localhost:8080');
     manager = new WebRTCManager(signalingClient);
-    bridge = new LightningBridge();
+    bridge = new LightningBridge(manager);
     manager.setBridge(bridge);
 
     // Mock navigator.mediaDevices
-    global.navigator.mediaDevices = {
-      getUserMedia: vi.fn().mockResolvedValue({
-        getTracks: () => [{ stop: vi.fn() }],
-      }),
-    } as any;
+    vi.stubGlobal('navigator', {
+      mediaDevices: {
+        getUserMedia: vi.fn().mockResolvedValue({
+          getTracks: () => [{ stop: vi.fn() }],
+        }),
+      }
+    });
 
     // Mock RTCPeerConnection
     class MockRTCPeerConnection {
@@ -39,11 +40,15 @@ describe('WebRTCManager', () => {
       ontrack = null;
       onconnectionstatechange = null;
       connectionState = 'new';
+      addTrack = vi.fn();
     }
-    global.RTCPeerConnection = MockRTCPeerConnection as any;
+    vi.stubGlobal('RTCPeerConnection', MockRTCPeerConnection);
+    vi.stubGlobal('RTCSessionDescription', vi.fn());
+    vi.stubGlobal('RTCIceCandidate', vi.fn());
+  });
 
-    global.RTCSessionDescription = vi.fn();
-    global.RTCIceCandidate = vi.fn();
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('should start local stream', async () => {
@@ -85,7 +90,5 @@ describe('WebRTCManager', () => {
     await manager.startLocalStream();
     await manager.createOffer('user1');
     manager.stopAll();
-    // We can't easily check RTCPeerConnection.close because it's a mock of the class
-    // but we can check if localStream tracks are stopped if we had a better mock.
   });
 });

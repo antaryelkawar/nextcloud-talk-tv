@@ -1,32 +1,50 @@
 import { Component } from '@lightningjs/core';
-import { conversationStore, conversationActions } from '../stores/conversationStore';
-import { Conversation } from '../types';
+import { conversationStore } from '../stores/conversationStore';
+import { TYPOGRAPHY } from '../../../core/constants';
 
 export default class MessageListView extends Component {
-  private currentConversationId: string | null = null;
-
-  constructor(config: any) {
-    super(config);
-    this.width = 1920;
-    this.height = 1080;
+  static _template() {
+    return {
+      rect: true,
+      w: 1920,
+      h: 1080,
+      color: 0xff121212,
+      Header: {
+        x: 90,
+        y: 60,
+        Title: {
+          text: {
+            text: 'Messages',
+            fontSize: TYPOGRAPHY.HEADING_SIZE,
+            fontFace: 'Inter',
+            textColor: 0xffffffff,
+          },
+        },
+      },
+      List: {
+        x: 90,
+        y: 150,
+        w: 1740,
+        h: 840,
+        children: [],
+      },
+    };
   }
 
   init(conversationId: string | null) {
-    this.currentConversationId = conversationId;
-    this.println(`Message List View Initialized for: ${conversationId}`);
-    
     if (conversationId) {
-      // In a real implementation, we would fetch messages here.
-      // conversationActions.fetchMessages(conversationId);
+      const conv = conversationStore.conversations.find(c => c.id === conversationId);
+      if (conv) {
+        this.tag('Header').tag('Title').text.text = conv.title || 'Unknown';
+      }
     }
   }
 
-  onBack() {
-    // @ts-ignore
-    this.parent.showConversationList();
+  _handleBack() {
+    this.fireAncestors('showConversationList');
   }
 
-  destroy() {
-    this.println('Message List View Destroyed');
+  println(msg: string) {
+    console.log(`[MessageListView] ${msg}`);
   }
 }
