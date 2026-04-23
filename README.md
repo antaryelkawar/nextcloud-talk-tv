@@ -1,28 +1,29 @@
-## Usage
+# Nextcloud Talk TV with SolidJS + LightningJS
 
-```bash
-$ npm install # or pnpm install or yarn install
+A TV-optimized video calling client for Nextcloud Talk, built with SolidJS and LightningJS.
+
+There are a few query params for customizing the application to test on devices
+
+size='720' | '1080' | '4k'
+numImageWorkers = 0 to disable image workers
+disableBG=true to turn off background (reduce memory)
+roundPoster=false to turn off rounded images on poster
+
+## Main Repo
+
+Solid
+[https://github.com/lightning-tv/solid](https://github.com/lightning-tv/solid)
+
+## Getting started
+
+Get an API Read Access Token from [TMDB API](https://developers.themoviedb.org/3/getting-started/introduction)
+and put the key in `src/api/key.js` with `export default 'KEY_VALUE'`
+
+```
+git clone https://github.com/lightning-tv/solid-demo-app
+cd solid-demo-app
+pnpm i
+pnpm start
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm run dev`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-Learn more about deploying your application with the [documentations](https://vite.dev/guide/static-deploy.html)
+If you're interested in using SolidJS with Lightning and Web check out [Web Branch](https://github.com/lightning-tv/solid-demo-app/tree/web) to see the setup.

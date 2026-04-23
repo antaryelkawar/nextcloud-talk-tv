@@ -1,0 +1,9 @@
+{
+  "id": "com.nextcloud.talk",
+  "version": "1.0.0",
+  "type": "web",
+  "title": "Nextcloud Talk TV",
+  "main": "index.html",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png"
+}

@@ -12,16 +12,12 @@
           "name": "Local: Gemma 4 26B"
         }
       }
-    },
+    }
+  },
+  "mcp": {
     "chrome-devtools": {
-      "options": {
-        "baseURL": "http://localhost:9222"
-      },
-      "models": {
-        "chrome-devtools/mcp": {
-          "name": "Chrome DevTools MCP"
-        }
-      }
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
     }
   },
   "agent": {
